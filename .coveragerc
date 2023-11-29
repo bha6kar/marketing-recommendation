@@ -1,0 +1,4 @@
+[run]
+omit =
+    */src/main/evaluate_model.py
+    */__init__.py 
