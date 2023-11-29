@@ -95,7 +95,7 @@ def get_model_LogisticRegression(
     best_params = grid_search.best_params_
 
     # Train the model with the best parameters
-    best_lr_model = LogisticRegression(max_iter=1000, **best_params)
+    best_lr_model = LogisticRegression(max_iter=10000, **best_params)
     best_lr_model.fit(X_train, y_train)
 
     # Save the best model
@@ -137,7 +137,8 @@ def get_model_XGBoost(X_train, y_train, save_path="models") -> XGBClassifier:
     return best_xgb_model
 
 
-def get_model_LSTM(X_train, y_train, save_path="models"):
+def get_model_LSTM(X_train, y_train, save_path="models") -> Sequential:
+    print("Training LSTM with GridSearchCV...")
     # Reshape X_train to a 3D array (samples, time steps, features)
     X_train_3d = X_train.values.reshape(X_train.shape[0], 1, X_train.shape[1])
 
@@ -147,7 +148,7 @@ def get_model_LSTM(X_train, y_train, save_path="models"):
     )
     class_weight_dict = dict(zip(np.unique(y_train), class_weights))
 
-    def create_model(num_units=50):
+    def create_model(num_units=32) -> Sequential:
         model = Sequential()
         model.add(
             LSTM(num_units, input_shape=(X_train_3d.shape[1], X_train_3d.shape[2]))
@@ -162,7 +163,9 @@ def get_model_LSTM(X_train, y_train, save_path="models"):
         return model
 
     # Create KerasClassifier wrapper for use with GridSearchCV
-    model = KerasClassifier(build_fn=create_model, epochs=10, batch_size=32, verbose=0)
+    model = KerasClassifier(
+        model=create_model, num_units=32, epochs=10, batch_size=32, verbose=0
+    )
 
     # Define the parameter grid
     param_grid = {
