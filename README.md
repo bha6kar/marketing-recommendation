@@ -11,7 +11,6 @@ For the task, I have used poetry to create the virtual environment.
    ```
 
 2.Goto the directory where `pyproject.toml` is located:
-eg- `Senior Data Scientist Task` where `pyproject.toml` is located
 Run:
 
    ```bash
